@@ -45,3 +45,79 @@ You will need Python 3.6 or newer installed on your system.
 ### Setup
 
 1. **Clone the repository (or download the files):**# satellite_packet_parser-practice-
+
+git clone <repository-url>
+cd <repository-directory>
+
+
+2. The project consists of two files:
+
+* `telemetry_parser.py`: Contains the main parsing function.
+
+* `test_telemetry_parser.py`: The unit tests.
+
+### Running the Tests
+
+To verify the implementation, run the unit tests from the project's root directory.
+
+python -m unittest test_telemetry_parser.py
+
+
+A successful run will show that the tests passed.
+
+## Usage Example
+
+To use the parser, import the `parse_telemetry` function from the `telemetry_parser.py` module.
+
+**`main.py`**
+
+from telemetry_parser import parse_telemetry
+import json
+
+A valid raw telemetry packet received from the satellite.
+hex_string = "AE5F1B0F68E54D600100191D4C0BB8FC18000052"
+raw_packet = bytes.fromhex(hex_string)
+
+parsed_data = parse_telemetry(raw_packet)
+
+if parsed_data:
+print("--- Telemetry Packet Parsed Successfully ---")
+# Use json.dumps for pretty printing the dictionary
+print(json.dumps(parsed_data, indent=4))
+else:
+print("Failed to parse telemetry packet. It may be invalid.")
+
+
+**Run your application:**
+
+python main.py
+
+
+## API Reference
+
+### `parse_telemetry(packet: bytes) -> dict | None`
+
+Parses a raw 20-byte telemetry packet.
+
+* **`packet`** (`bytes`): A `bytes` object of length 20 containing the raw packet data.
+
+* **Returns**: A `dictionary` containing the parsed data on success. On failure (e.g., checksum mismatch, invalid sync word, or wrong length), it returns `None`.
+
+**Example Success Return:**
+
+{
+"timestamp": 1757107200,
+"status": "NOMINAL",
+"temperature_c": 25,
+"battery_mv": 7500,
+"wheel_speeds_rpm": {
+"x": 3000,
+"y": -1000,
+"z": 0
+}
+}
+
+
+## License
+
+This project is licensed under the MIT License - see the `LICENSE` file for details.
